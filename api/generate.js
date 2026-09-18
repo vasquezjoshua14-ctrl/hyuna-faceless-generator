@@ -305,8 +305,20 @@ Accessories:
 ${accessories}
 
 Create the final AI image generation prompt.
-`;
 
+IMPORTANT:
+Use ALL selected options exactly.
+
+Do not ignore:
+- Hand Style
+- Background
+- Camera Angle
+- Nail Style
+- Accessories
+
+Expand these selections into a detailed professional scene.
+
+Return only the final prompt.
 
   try {
 
