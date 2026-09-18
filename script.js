@@ -7,47 +7,50 @@ let selected = {
 };
 
 
-// SELECT BUTTONS
+// pili ng buttons
+document.querySelectorAll(".box").forEach(box => {
 
-const boxes = document.querySelectorAll(".box");
-
-boxes.forEach(box => {
-
-  const title = box.querySelector("h2")?.innerText || "";
   const buttons = box.querySelectorAll("button");
+  const title = box.querySelector("h2").innerText;
+
 
   buttons.forEach(button => {
 
     button.addEventListener("click", () => {
 
+
       buttons.forEach(btn => {
-        btn.style.background = "#ffd6e8";
-        btn.style.color = "#6b4056";
+        btn.classList.remove("active");
       });
 
-      button.style.background = "#d66fa0";
-      button.style.color = "white";
+
+      button.classList.add("active");
 
 
       if(title.includes("Background")) {
         selected.background = button.innerText;
       }
 
+
       if(title.includes("Camera")) {
         selected.camera = button.innerText;
       }
+
 
       if(title.includes("Hand")) {
         selected.hand = button.innerText;
       }
 
+
       if(title.includes("Nail")) {
         selected.nails = button.innerText;
       }
 
+
       if(title.includes("Accessories")) {
         selected.accessories = button.innerText;
       }
+
 
     });
 
@@ -58,23 +61,78 @@ boxes.forEach(box => {
 
 
 
-// COPY PROMPT
+// GENERATE PROMPT
 
-async function copyPrompt(){
+async function generatePrompt(){
 
-  const text = document.getElementById("result").value;
+const result = document.getElementById("result");
 
-  try {
+result.value = "✨ Generating professional prompt...";
 
-    await navigator.clipboard.writeText(text);
 
-    alert("Prompt copied ✨");
+const productText = document.getElementById("product").value;
 
-  } catch(error){
 
-    alert("Copy failed. Please select manually.");
+try {
 
-  }
+
+const response = await fetch("/api/generate", {
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+
+body:JSON.stringify({
+
+product: productText,
+
+hand:selected.hand,
+
+background:selected.background,
+
+camera:selected.camera,
+
+nails:selected.nails,
+
+accessories:selected.accessories
+
+})
+
+});
+
+
+
+const data = await response.json();
+
+
+
+if(data.prompt){
+
+result.value = data.prompt;
+
+}
+
+else{
+
+result.value = "No prompt generated.";
+
+}
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+result.value = "Error generating prompt.";
+
+}
+
 
 }
 
@@ -82,83 +140,27 @@ async function copyPrompt(){
 
 
 
-// GENERATE PROMPT
+// COPY BUTTON
 
-const generateBtn = document.querySelector(".generate");
+async function copyPrompt(){
 
-
-if(generateBtn){
-
-generateBtn.addEventListener("click", async () => {
+const text = document.getElementById("result").value;
 
 
-  const result = document.getElementById("result");
+try{
+
+await navigator.clipboard.writeText(text);
+
+alert("Prompt copied ✨");
 
 
-  result.value = "Creating professional prompt... ✨";
+}
 
+catch(error){
 
-  try {
+alert("Copy failed. Select manually.");
 
+}
 
-    const response = await fetch("/api/generate", {
-
-      method: "POST",
-
-      headers: {
-
-        "Content-Type": "application/json"
-
-      },
-
-
-      body: JSON.stringify({
-
-        product: "Uploaded product image",
-
-        hand: selected.hand,
-
-        background: selected.background,
-
-        camera: selected.camera,
-
-        nails: selected.nails,
-
-        accessories: selected.accessories
-
-      })
-
-
-    });
-
-
-
-    const data = await response.json();
-
-
-
-    if(data.prompt){
-
-      result.value = data.prompt;
-
-    } else {
-
-      result.value = "No prompt generated.";
-
-    }
-
-
-
-  } catch(error){
-
-
-    result.value = "Error: " + error.message;
-
-
-  }
-
-
-
-});
 
 }
