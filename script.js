@@ -59,39 +59,49 @@ boxes.forEach(box => {
 function generatePrompt(){
 
 let prompt = 
-`Vertical 9:16 realistic UGC product photography.
+`Vertical 9:16 ultra realistic product photography.
 
-Product: uploaded product image.
+Product:
+Uploaded product image. Keep the exact product shape, color, design, and details.
 
 Create a premium faceless Korean feminine hand model style.
 
-Hand pose: ${selected.hand}
+Hand presentation:
+${selected.hand}
 
-Background: ${selected.background}
+Background:
+${selected.background}
 
-Camera angle: ${selected.camera}
+Camera angle:
+${selected.camera}
 
-Nail style: ${selected.nails}
+Nail style:
+${selected.nails}
 
-Accessories: ${selected.accessories}
+Accessories:
+${selected.accessories}
 
-The product is the main hero.
-Beautiful realistic hands, high quality nails, luxury commercial photography, sharp focus, natural lighting.`;
+Photography direction:
+
+- The product is always the main hero.
+- Beautiful realistic feminine hands.
+- Korean beauty advertisement aesthetic.
+- Natural elegant finger placement.
+- Premium commercial product photoshoot.
+- Soft cinematic lighting.
+- Realistic shadows.
+- Sharp product details.
+- Luxury lifestyle atmosphere.
+- High resolution professional photography.
+
+Rules:
+- Never show a face.
+- Do not change the product design.
+- Make the hand pose natural and attractive.
+- Background must match the product mood.
+
+Professional advertising quality, realistic textures, premium brand campaign style.`;
 
 document.getElementById("result").value = prompt;
-
-}
-
-
-
-function copyPrompt(){
-
-const text = document.getElementById("result");
-
-text.select();
-
-document.execCommand("copy");
-
-alert("Prompt copied ✨");
 
 }
