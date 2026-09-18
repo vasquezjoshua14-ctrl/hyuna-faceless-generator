@@ -7,12 +7,13 @@ let selected = {
 };
 
 
+// SELECT BUTTONS
+
 const boxes = document.querySelectorAll(".box");
 
-
 boxes.forEach(box => {
-  const title = box.querySelector("h2")?.innerText || "";
 
+  const title = box.querySelector("h2")?.innerText || "";
   const buttons = box.querySelectorAll("button");
 
   buttons.forEach(button => {
@@ -56,130 +57,108 @@ boxes.forEach(box => {
 
 
 
+
+// COPY PROMPT
+
 async function copyPrompt(){
 
-const text = document.getElementById("result").value;
-
-try {
-  await navigator.clipboard.writeText(text);
-  alert("Prompt copied ✨");
-} catch (error) {
-  alert("Copy failed. Please select the text manually.");
-}
-
-}
-const generateBtn = document.querySelector(".generate");
-
-generateBtn.addEventListener("click", async () => {
-
-  const result = document.getElementById("result");
-
-  result.value = "Generating prompt... ✨";
+  const text = document.getElementById("result").value;
 
   try {
 
+    await navigator.clipboard.writeText(text);
+
+    alert("Prompt copied ✨");
+
+  } catch(error){
+
+    alert("Copy failed. Please select manually.");
+
+  }
+
+}
+
+
+
+
+
+// GENERATE PROMPT
+
+const generateBtn = document.querySelector(".generate");
+
+
+if(generateBtn){
+
+generateBtn.addEventListener("click", async () => {
+
+
+  const result = document.getElementById("result");
+
+
+  result.value = "Creating professional prompt... ✨";
+
+
+  try {
+
+
     const response = await fetch("/api/generate", {
+
       method: "POST",
+
       headers: {
+
         "Content-Type": "application/json"
+
       },
+
+
       body: JSON.stringify({
+
+        product: "Uploaded product image",
+
         hand: selected.hand,
+
         background: selected.background,
+
         camera: selected.camera,
+
         nails: selected.nails,
-        accessories: selected.accessories,
-        product: "Uploaded product image"
+
+        accessories: selected.accessories
+
       })
+
+
     });
+
 
 
     const data = await response.json();
 
 
+
     if(data.prompt){
+
       result.value = data.prompt;
+
     } else {
+
       result.value = "No prompt generated.";
+
     }
+
 
 
   } catch(error){
 
-    result.value = "Error: " + error.message;
-
-  }
-
-});
-const generateBtn = document.querySelector(".generate");
-
-generateBtn.addEventListener("click", async () => {
-
-  const result = document.getElementById("result");
-
-  result.value = "Generating prompt... ✨";
-
-  try {
-
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        hand: selected.hand,
-        background: selected.background,
-        camera: selected.camera,
-        nails: selected.nails,
-        accessories: selected.accessories,
-        product: "Uploaded product image"
-      })
-    });
-
-    const data = await response.json();
-
-    result.value = data.prompt;
-
-  } catch(error) {
-
-    result.value = "Error generating prompt";
-
-  }
-
-});
-const generateBtn = document.querySelector(".generate");
-
-generateBtn.addEventListener("click", async () => {
-
-  const result = document.getElementById("result");
-
-  result.value = "Generating prompt... ✨";
-
-  try {
-
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        hand: selected.hand,
-        background: selected.background,
-        camera: selected.camera,
-        nails: selected.nails,
-        accessories: selected.accessories,
-        product: "Uploaded product image"
-      })
-    });
-
-    const data = await response.json();
-
-    result.value = data.prompt || "No prompt generated.";
-
-  } catch(error) {
 
     result.value = "Error: " + error.message;
 
+
   }
 
+
+
 });
+
+}
