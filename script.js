@@ -1,4 +1,5 @@
 alert("SCRIPT OK");
+
 let selected = {
   background: "Auto Match",
   camera: "Auto Match",
