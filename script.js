@@ -7,50 +7,38 @@ let selected = {
 };
 
 
-// pili ng buttons
+// BUTTON SELECT
 document.querySelectorAll(".box").forEach(box => {
 
   const buttons = box.querySelectorAll("button");
-  const title = box.querySelector("h2").innerText;
-
+  const title = box.querySelector("h2")?.innerText || "";
 
   buttons.forEach(button => {
 
     button.addEventListener("click", () => {
 
-
-      buttons.forEach(btn => {
-        btn.classList.remove("active");
-      });
-
-
+      buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
 
-
-      if(title.includes("Background")) {
+      if (title.includes("Background")) {
         selected.background = button.innerText;
       }
 
-
-      if(title.includes("Camera")) {
+      if (title.includes("Camera")) {
         selected.camera = button.innerText;
       }
 
-
-      if(title.includes("Hand")) {
+      if (title.includes("Hand")) {
         selected.hand = button.innerText;
       }
 
-
-      if(title.includes("Nail")) {
+      if (title.includes("Nail")) {
         selected.nails = button.innerText;
       }
 
-
-      if(title.includes("Accessories")) {
+      if (title.includes("Accessories")) {
         selected.accessories = button.innerText;
       }
-
 
     });
 
@@ -59,108 +47,123 @@ document.querySelectorAll(".box").forEach(box => {
 });
 
 
-
-
 // GENERATE PROMPT
 
 async function generatePrompt(){
 
-const result = document.getElementById("result");
+  const result = document.getElementById("result");
 
-result.value = "✨ Generating professional prompt...";
-
-
-const productText = document.getElementById("product").value;
+  result.value = "✨ Generating professional prompt...";
 
 
-try {
+  const fileInput = document.getElementById("product");
+
+  let productName = "Product image";
+
+  if(fileInput && fileInput.files.length > 0){
+    productName = fileInput.files[0].name;
+  }
 
 
-const response = await fetch("/api/generate", {
+  try{
 
-method:"POST",
+    const response = await fetch("/api/generate",{
 
-headers:{
-"Content-Type":"application/json"
-},
+      method:"POST",
 
+      headers:{
+        "Content-Type":"application/json"
+      },
 
-body:JSON.stringify({
+      body:JSON.stringify({
 
-product: productText,
+        product: productName,
 
-hand:selected.hand,
+        background:selected.background,
 
-background:selected.background,
+        camera:selected.camera,
 
-camera:selected.camera,
+        hand:selected.hand,
 
-nails:selected.nails,
+        nails:selected.nails,
 
-accessories:selected.accessories
+        accessories:selected.accessories
 
-})
+      })
 
-});
-
-
-
-const data = await response.json();
+    });
 
 
+    const data = await response.json();
 
-if(data.prompt){
 
-result.value = data.prompt;
+    if(data.prompt){
+
+      result.value = data.prompt;
+
+    }else{
+
+      result.value = 
+`Professional faceless product photography:
+
+Product: ${productName}
+Background: ${selected.background}
+Camera: ${selected.camera}
+Hand Style: ${selected.hand}
+Nails: ${selected.nails}
+Accessories: ${selected.accessories}
+
+High quality studio lighting, realistic luxury product photo.`;
+
+    }
+
+
+  }catch(error){
+
+    console.log(error);
+
+
+    result.value =
+`Professional faceless product photography:
+
+Product: ${productName}
+Background: ${selected.background}
+Camera: ${selected.camera}
+Hand Style: ${selected.hand}
+Nails: ${selected.nails}
+Accessories: ${selected.accessories}
+
+High quality, realistic product photography.`;
+
+  }
 
 }
 
-else{
-
-result.value = "No prompt generated.";
-
-}
 
 
-
-}
-
-catch(error){
-
-console.log(error);
-
-result.value = "Error generating prompt.";
-
-}
-
-
-}
-
-
-
-
-
-// COPY BUTTON
+// COPY
 
 async function copyPrompt(){
 
-const text = document.getElementById("result").value;
+ const text = document.getElementById("result").value;
 
 
-try{
+ if(!text){
+   alert("No prompt available");
+   return;
+ }
 
-await navigator.clipboard.writeText(text);
 
-alert("Prompt copied ✨");
+ try{
 
+   await navigator.clipboard.writeText(text);
 
-}
+   alert("Prompt copied ✨");
 
-catch(error){
+ }catch(e){
 
-alert("Copy failed. Select manually.");
+   alert("Copy failed");
 
-}
-
+ }
 
 }
