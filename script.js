@@ -68,3 +68,46 @@ try {
 }
 
 }
+const generateBtn = document.querySelector(".generate");
+
+generateBtn.addEventListener("click", async () => {
+
+  const result = document.getElementById("result");
+
+  result.value = "Generating prompt... ✨";
+
+  try {
+
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        hand: selected.hand,
+        background: selected.background,
+        camera: selected.camera,
+        nails: selected.nails,
+        accessories: selected.accessories,
+        product: "Uploaded product image"
+      })
+    });
+
+
+    const data = await response.json();
+
+
+    if(data.prompt){
+      result.value = data.prompt;
+    } else {
+      result.value = "No prompt generated.";
+    }
+
+
+  } catch(error){
+
+    result.value = "Error: " + error.message;
+
+  }
+
+});
