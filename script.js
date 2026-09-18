@@ -56,52 +56,37 @@ boxes.forEach(box => {
 
 
 
-function generatePrompt(){
+async function generatePrompt(){
 
-let prompt = 
-`Vertical 9:16 ultra realistic product photography.
+const product = "Uploaded product image";
 
-Product:
-Uploaded product image. Keep the exact product shape, color, design, and details.
 
-Create a premium faceless Korean feminine hand model style.
+const response = await fetch("/api/generate", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
 
-Hand presentation:
-${selected.hand}
+    product: product,
 
-Background:
-${selected.background}
+    hand: selected.hand,
 
-Camera angle:
-${selected.camera}
+    background: selected.background,
 
-Nail style:
-${selected.nails}
+    camera: selected.camera,
 
-Accessories:
-${selected.accessories}
+    nails: selected.nails,
 
-Photography direction:
+    accessories: selected.accessories
 
-- The product is always the main hero.
-- Beautiful realistic feminine hands.
-- Korean beauty advertisement aesthetic.
-- Natural elegant finger placement.
-- Premium commercial product photoshoot.
-- Soft cinematic lighting.
-- Realistic shadows.
-- Sharp product details.
-- Luxury lifestyle atmosphere.
-- High resolution professional photography.
+  })
+});
 
-Rules:
-- Never show a face.
-- Do not change the product design.
-- Make the hand pose natural and attractive.
-- Background must match the product mood.
 
-Professional advertising quality, realistic textures, premium brand campaign style.`;
+const data = await response.json();
 
-document.getElementById("result").value = prompt;
+
+document.getElementById("result").value = data.prompt;
 
 }
