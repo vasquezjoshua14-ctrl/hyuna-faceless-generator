@@ -56,37 +56,15 @@ boxes.forEach(box => {
 
 
 
-async function generatePrompt(){
+async function copyPrompt(){
 
-const product = "Uploaded product image";
+const text = document.getElementById("result").value;
 
-
-const response = await fetch("/api/generate", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-
-    product: product,
-
-    hand: selected.hand,
-
-    background: selected.background,
-
-    camera: selected.camera,
-
-    nails: selected.nails,
-
-    accessories: selected.accessories
-
-  })
-});
-
-
-const data = await response.json();
-
-
-document.getElementById("result").value = data.prompt;
+try {
+  await navigator.clipboard.writeText(text);
+  alert("Prompt copied ✨");
+} catch (error) {
+  alert("Copy failed. Please select the text manually.");
+}
 
 }
