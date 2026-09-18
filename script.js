@@ -1,5 +1,5 @@
+alert("SCRIPT OK");
 let selected = {
-  alert("SCRIPT OK");
   background: "Auto Match",
   camera: "Auto Match",
   hand: "Auto Match",
